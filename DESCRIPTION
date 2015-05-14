@@ -1,0 +1,9 @@
+Package: flamer
+Type: Package
+Title: Handle spatial water chemistry datasets created with the FLAMe
+Version: 0.0.900
+Date: 2015-05-14
+Author: John Crawford and Luke Loken 
+Maintainer: John Crawford <jtcrawford@usgs.gov>
+Description: Synchronize high frequency sensors, correct data, generate shapefiles for geospatial analysis
+License: What license is it under?
