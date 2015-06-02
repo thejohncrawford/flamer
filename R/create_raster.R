@@ -5,6 +5,20 @@
 setwd("C:/Users/jtcrawford/Dropbox/FLAME/Data/2015-05-22_LakeMendota/shapefiles")
 library(rgdal)
 library(gstat)
+library(maptools)
+library(rgdal)
+library(sp)
+library(gstat)
+library(raster)
+library(geoR)
+library(plotKML)
+library(automap)
+library(ggplot2)
+library(colorRamps)
+library(squash)
+library(caTools)
+library(kriging)
+library(RgoogleMaps)
 shapef = readOGR(".", "LakeMendota2015-05-22")
 str(shapef)
 shapef = spTransform(shapef, CRS("+init=epsg:32616"))
@@ -41,7 +55,7 @@ scols <- c("green", "red")
 ###################################################################################
 Semivariance=function(shape){
   
-  shape_UTM<-shapef
+  shape_UTM<-shape
   
   i=5
   #cutoff= #need to set to be 1/3 to 1/2 the spatial width
@@ -67,3 +81,4 @@ Semivariance=function(shape){
   
   
 }
+Semivariance(shapef)
