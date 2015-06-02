@@ -39,3 +39,31 @@ brks.se <- c(0, 240, 250, 260, 270, 280, 290, 300, 350, 400, 1000)
 cols.se <- sepal(length(brks.se) - 1)
 scols <- c("green", "red")
 ###################################################################################
+Semivariance=function(shape){
+  
+  shape_UTM<-shapef
+  
+  i=5
+  #cutoff= #need to set to be 1/3 to 1/2 the spatial width
+  #width= #need to set to be 1/3 to 1/2 the spatial width
+  #  for (i in 1:length(shape_UTM@data)){
+  
+  name<-names(shape_UTM@data)[i]
+  b<-shape[is.na(shape_UTM@data[,i])==FALSE,]
+  #Variogram model 1 - Autofit
+  variogram1 = autofitVariogram(b@data[,i]~1,b, model="Sph")
+  plot(variogram1)
+  summary(variogram1)
+  
+  #Variogram model 2 - set lags
+  variogram2<-variogram(b@data[,i]~1,b, width=10, cutoff=3000)
+  summary(variogram2)
+  plot(variogram2)
+  model<-fit.variogram(variogram2, vgm(1, "Sph", 1000, 1), fit.sills=TRUE, fit.ranges=TRUE )
+  summary(model)
+  plot(variogram2, model=model, col="black", xlab="lag distance (m)", cex=0.6)
+  
+  #}
+  
+  
+}
