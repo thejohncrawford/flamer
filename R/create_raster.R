@@ -7,15 +7,17 @@ library(rgdal)
 shapef = readOGR(".", "LakeMendota2015-05-22")
 str(shapef)
 #here ->> reproject into UTM in order to make grid topology and kriging sensible
+shapef = spTransform(shapef, CRS("+init=epsg:32616"))
+str(shapef)
 ###################################################################################
 #the "roll-your-own" boundaries for interpolation
 crds = coordinates(shapef)
 poly = crds[chull(crds), ]
 poly = rbind(poly, poly[1, ])
 SPpoly = SpatialPolygons(list(Polygons(list(Polygon(poly)), ID = "poly")))
-bbox(shapef)
-#(apply(bbox(shapef), 1, diff)%/%50) + 1#not sure what this does
-grd <- GridTopology(c(178600, 330300), c(50, 50), c(48, 41))# this needs to be automated, need to work with UTM's 
+bbox(shapef)# extract coords.x1 and coords.x2 min as the first arguments to GridTopology
+(apply(bbox(shapef), 1, diff)%/%50) + 1#these values become the last argument to GridTopology
+grd <- GridTopology(c(297976, 4772269.9), c(50, 50), c(175, 150))# this needs to be automated, need to work with UTM's 
 SG <- SpatialGrid(grd)
 inside <- over(SG, SPpoly)
 SGDF <- SpatialGridDataFrame(grd, data = data.frame(list(ins = inside)))
