@@ -1,5 +1,6 @@
 #working code to create raster from point data and calculate geostatistics for FLAMe
 #JTC, June 2015
+#following example from http://www.bias-project.org.uk/ASDARcourse/unit4_slides.pdf
 ###################################################################################
 setwd("C:/Users/jtcrawford/Dropbox/FLAME/Data/2015-05-22_LakeMendota/shapefiles")
 library(rgdal)
@@ -7,6 +8,7 @@ shapef = readOGR(".", "LakeMendota2015-05-22")
 str(shapef)
 #here ->> reproject into UTM in order to make grid topology and kriging sensible
 ###################################################################################
+#the "roll-your-own" boundaries for interpolation
 crds = coordinates(shapef)
 poly = crds[chull(crds), ]
 poly = rbind(poly, poly[1, ])
