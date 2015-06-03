@@ -11,11 +11,8 @@ library(sp)
 library(gstat)
 library(raster)
 library(geoR)
-library(plotKML)
 library(automap)
 library(ggplot2)
-library(colorRamps)
-library(squash)
 library(caTools)
 library(kriging)
 library(RgoogleMaps)
@@ -31,7 +28,7 @@ poly = rbind(poly, poly[1, ])
 SPpoly = SpatialPolygons(list(Polygons(list(Polygon(poly)), ID = "poly")))
 bbox(shapef)# extract coords.x1 and coords.x2 min as the first arguments to GridTopology
 (apply(bbox(shapef), 1, diff)%/%50) + 1#these values become the last argument to GridTopology
-grd <- GridTopology(c(297976, 4772269.9), c(100, 100), c(175, 150))# this needs to be automated, need to work with UTM's 
+grd <- GridTopology(c(297976, 4772269.9), c(1000, 1000), c(175, 150))# this needs to be automated, need to work with UTM's 
 SG <- SpatialGrid(grd)
 inside <- over(SG, SPpoly)
 SGDF <- SpatialGridDataFrame(grd, data = data.frame(list(ins = inside)))
@@ -54,7 +51,7 @@ cols.se <- sepal(length(brks.se) - 1)
 scols <- c("green", "red")
 ###################################################################################
 Semivariance=function(shape){
-  
+  shape=shapef
   shape_UTM<-shape
   
   i=5
@@ -63,7 +60,7 @@ Semivariance=function(shape){
   #  for (i in 1:length(shape_UTM@data)){
   
   name<-names(shape_UTM@data)[i]
-  b<-shape[is.na(shape_UTM@data[,i])==FALSE,]
+  b<-shape[!is.na(shape_UTM@data[,i]),]
   #Variogram model 1 - Autofit
   variogram1 = autofitVariogram(b@data[,i]~1,b, model="Sph")
   plot(variogram1)
@@ -79,6 +76,13 @@ Semivariance=function(shape){
   
   #}
   
-  
+  OK_fit <- gstat(id = "OK_fit", formula = b@data[,i]~1, data = b, model = model)
+  pe <- gstat.cv(OK_fit, debug.level = 0, random = FALSE)$residual
+  z <- predict(OK_fit, newdata = SPDF, debug.level = 0)
+  SGDF$OK_pred <- z$OK_fit.pred
+  SGDF$OK_se <- sqrt(z$OK_fit.var)
+  #image(SGDF, "OK_pred", breaks = brks, col = cols)
+  #return(OK_fit)
 }
 Semivariance(shapef)
+###############
