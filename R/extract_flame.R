@@ -7,12 +7,12 @@
 
 #sampledata=extract_flame(geodata, meta)
 
-extract_flame=function(table, samples){
+extract_flame=function(table, samples, SamplesPath){
+  if (meta$number_of_samples[1]!=0){
   library(caTools)
-  samplevars<-c ("Sample.Number", "Sample.Time", "Sample.Notes")
+  samplevars<-c ("sample_id", "event_id", "Sample.Number", "Sample.Time", "Sample.Notes")
   samples<-samples[samplevars]
   samples<-samples[is.na(samples$Sample.Number)==FALSE,]
-  if (length(samples$Sample.Time)>0){
   samples$DateTime<-as.POSIXct(paste(Date,samples$Sample.Time, sep=" "), format="%Y-%m-%d %H:%M:%S", tz=as.character(meta$GPS_Timezone[1]))
     
   table$ltime<-as.POSIXct(round(table$ltime, "mins"))
@@ -23,7 +23,7 @@ extract_flame=function(table, samples){
   
   Flame_times<-merge(samples, table2, by.x="DateTime", by.y="ltime" )
   
-  write.table(Flame_times, file = as.character(paste("samples/FlameSites", Site, Date, ".csv", sep="")), col.names=TRUE,row.names=F, sep=",")
+  write.table(Flame_times, file = as.character(paste("samples/", SamplesPath, sep="")), col.names=TRUE,row.names=F, sep=",")
   
   return(Flame_times)
   }
