@@ -35,25 +35,45 @@ if (length(YsiPath)>0){
 YsiFull<-do.call("rbind", lapply(paste("ysi/",YsiPath,  sep=""), read.table, sep="," ,skip=25,  header = TRUE)) 
 YsiFull$Date_Time <- as.POSIXct(paste(YsiFull$Date..MM.DD.YYYY., YsiFull$Time..HH.MM.SS.), format="%m/%d/%Y %H:%M:%S", tz=as.character(meta$YSI_Timezone[1]))
 YsiFull$Date_Time<-(YsiFull$Date_Time+meta$YSI_Time_Offset[1])
-ysivars <- c("Date_Time", "Temp..C", "SpCond.µS.cm", "Chlorophyll.RFU", "Chlorophyll.µg.L", "BGA.PC.RFU", "BGA.PC.µg.L", "Turbidity.FNU", "fDOM.RFU", "fDOM.QSU", "ODO...sat", "ODO.mg.L", "pH", "Press.psi.a")
+ysivars <- c("Date_Time", "Temp..C", "SpCond.?S.cm", "Chlorophyll.RFU", "Chlorophyll.?g.L", "BGA.PC.RFU", "BGA.PC.?g.L", "Turbidity.FNU", "fDOM.RFU", "fDOM.QSU", "ODO...sat", "ODO.mg.L", "pH", "Press.psi.a")
 YsiFull <- YsiFull[ysivars]
 }
 ######################################################################################
 #read in all of the GPS files
 GpsPath=list.files(path = paste(getwd(), "/gps", sep=""))
-GpsAll<-do.call("rbind", lapply(paste("gps/", GpsPath, sep=""), read.table, sep="," , header = TRUE)) 
+
+if (meta$GPS_Unit[1]=="RiverEco1" | meta$GPS_Unit[1]=="RiverEco2"){
+GpsAll<-do.call("rbind", lapply(paste("gps/", GpsPath, sep=""), read.table, sep="," , header = TRUE))
 GpsAll$ltime=as.POSIXct(GpsAll$ltime, tz=as.character(meta$GPS_Timezone[1]))
 GpsAll$ltime<-(GpsAll$ltime+meta$GPS_Time_Offset[1])
+GpsAll$ltime=as.POSIXct(GpsAll$ltime, tz=as.character(meta$GPS_Timezone[1]))
+gpsvars <- c("ltime", "Latitude", "Longitude" )
+GpsAll <- GpsAll[gpsvars]
+}
+
+if (meta$GPS_Unit[1]=="LTERGarmin" | meta$GPS_Unit[1]=="USGS"){
+  
+  GpsAll<-do.call("rbind", lapply(paste("gps/", GpsPath, sep=""), read.table, sep="," , header = TRUE, skip=42))
+  date<-str_sub(GpsAll$time,1,10)
+  time<-str_sub(GpsAll$time,-9,-2)
+  GpsAll$ltime<-as.POSIXct(paste(date,time, sep=" "), format="%Y-%m-%d %H:%M:%S", tz=as.character(meta$GPS_Timezone[1]))
+  GpsAll$Latitude<-GpsAll$lat
+  GpsAll$Longitude<-GpsAll$lon
+  gpsvars <- c("ltime", "Latitude", "Longitude","Depth" )
+  GpsAll <- GpsAll[gpsvars]
+}  
+
+GpsAll$ltime<-(GpsAll$ltime+meta$GPS_Time_Offset[1])
+
 ######################################################################################
 #cut gps to FLAME_ON intervals
 i=1
 GpsFull<-data.frame() 
-for (i in 1:length(meta$Flame_On)){
-  interval=as.POSIXct(c(Flame_On[i], Flame_Off[i]),tz="America/Chicago")
+for (i in 1:length(Flame_On)){
+  interval=as.POSIXct(c(Flame_On[i], Flame_Off[i]), tz=as.character(meta$GPS_Timezone[1]))
   GpsFull<-rbind(GpsFull, subset(GpsAll,GpsAll$ltime>=interval[1] & GpsAll$ltime<=interval[2]))
 }
-gpsvars <- c("ltime", "Latitude", "Longitude","altitude" )
-GpsFull <- GpsFull[gpsvars]
+
 #str(GpsFull)
 #plot(GpsFull$Longitude,GpsFull$Latitude, col="red", cex=.5)
 #################################################################################
@@ -82,7 +102,7 @@ if (length(NitroPath)==0) {
 
 colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "[.]", "")
 colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "[_]", "")
-colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "[µ]", "u")
+colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "[?]", "u")
 colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "Chlorophyll", "ChlA")
 colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "Turbidity", "Turb")
 colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "DRY", "D")
