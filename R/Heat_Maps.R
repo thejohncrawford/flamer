@@ -26,9 +26,10 @@ Heat_Maps<-function(shape, destination, Site, Date){
   colors<-bpy.colors(n=B, cutoff.tails=0.1, alpha=1)
 
   #Load Mendota basemap if site==Mendota
-  if(Site=="Mendota"){
+  if(Site=="LakeMendota"){
     base<-Mendota_Base
   for (i in 2:length(shape@data)){
+    if (is.numeric(shape@data[,i])==TRUE){
     name<-names(shape@data)[i]
     a<-shape[is.na(shape@data[,i])==FALSE,]
     a$Col <- as.numeric(cut(a@data[,i],breaks = B))
@@ -61,6 +62,7 @@ Heat_Maps<-function(shape, destination, Site, Date){
     dev.off()
   }
 }
+}
 
 if(Site=="Pool8"){
   base<-Pool8_Base
@@ -76,6 +78,7 @@ if(Site=="Pool8"){
   }
 
   for (i in 2:length(shape@data)){
+    if (is.numeric(shape@data[,i])==TRUE){
     name<-names(shape@data)[i]
     a<-shape[is.na(shape@data[,i])==FALSE,]
     a$Col <- as.numeric(cut(a@data[,i],breaks = B))
@@ -110,12 +113,14 @@ if(Site=="Pool8"){
     
     dev.off()
   }
+  }
 }
 
 #No basemap if Site!=Mendota or Pool8
-if(Site!="Mendota" & Site!="Pool8"){
+if(Site!="LakeMendota" & Site!="Pool8"){
 
   for (i in 2:length(shape@data)){
+    if (is.numeric(shape@data[,i])==TRUE){
     name<-names(shape@data)[i]
     a<-shape[is.na(shape@data[,i])==FALSE,]
     a$Col <- as.numeric(cut(a@data[,i],breaks = B))
@@ -145,6 +150,7 @@ if(Site!="Mendota" & Site!="Pool8"){
     mtext("Time", 1, 2)   
     mtext(paste(Site, Date, name, sep=" "), 3, -1, outer=TRUE, cex=1.5)
     dev.off()
+  }
   }
 }
 
