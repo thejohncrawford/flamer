@@ -1,11 +1,3 @@
-#' wrapper function for handling FLAMe data
-#'
-#' un functions to compile data to single table, correct instrument responses and write to GIS shapefile
-#' @param meta the name of the metadata (control) file
-#' @keywords wrapper
-#' @export
-#' @examples
-#' flame_engage()
 ######################################################################
 #wrapper function for handling FLAMe data
 #######################################################################################################
@@ -18,9 +10,9 @@ instruments=read_instruments(Site, Date)
 geodata=tau_correct(instruments)
 #Convert CO2 and CH4 to uM and %Sat units
 #numeric value (meters) computed from GpsFull$altitude in read instruments script. 
-geodata=convert_gases(geodata, median(instruments$altitude))
+geodata=convert_gases(geodata, meta$Elevation[1])
 #Extract Flame data from water chemistry collection times.
-sampledata=extract_flame(geodata,Samples)
+sampledata=extract_flame(geodata,Samples, SamplesPath)
 #Convert dataframe to geospatial object and export shapefile. 
 #'shapefile' has lat/lon in decimal degrees
 shapefile<-write_shapefile(geodata, paste(Site, Date,  sep=""), getwd(), Site, Date)
