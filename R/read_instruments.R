@@ -35,7 +35,7 @@ if (length(YsiPath)>0){
 YsiFull<-do.call("rbind", lapply(paste("ysi/",YsiPath,  sep=""), read.table, sep="," ,skip=25,  header = TRUE)) 
 YsiFull$Date_Time <- as.POSIXct(paste(YsiFull$Date..MM.DD.YYYY., YsiFull$Time..HH.MM.SS.), format="%m/%d/%Y %H:%M:%S", tz=as.character(meta$YSI_Timezone[1]))
 YsiFull$Date_Time<-(YsiFull$Date_Time+meta$YSI_Time_Offset[1])
-ysivars <- c("Date_Time", "Temp..C", "SpCond.?S.cm", "Chlorophyll.RFU", "Chlorophyll.?g.L", "BGA.PC.RFU", "BGA.PC.?g.L", "Turbidity.FNU", "fDOM.RFU", "fDOM.QSU", "ODO...sat", "ODO.mg.L", "pH", "Press.psi.a")
+ysivars <- c("Date_Time", "Temp..C", "SpCond.μS.cm", "Chlorophyll.RFU", "Chlorophyll.μg.L", "BGA.PC.RFU", "BGA.PC.μg.L", "Turbidity.FNU", "fDOM.RFU", "fDOM.QSU", "ODO...sat", "ODO.mg.L", "pH", "Press.psi.a")
 YsiFull <- YsiFull[ysivars]
 }
 ######################################################################################
