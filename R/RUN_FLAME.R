@@ -15,7 +15,7 @@ library(rgdal)
 setwd("C:/Users/jtcrawford/Dropbox/FLAME/R scripts")
 setwd("C:/Users/Luke/Dropbox/FLAME/R scripts")
 setwd("C:/Users/Vince/Dropbox/FLAME/R scripts")
-setwd("E:/Dropbox/FLAME/R scripts")
+setwd("F:/Dropbox/FLAME/R scripts")
 
 #call the FLAMe scripts
 source("suna_datetime.R")
@@ -31,7 +31,7 @@ source("extract_flame.R")
 setwd("C:/Users/jtcrawford/Dropbox/FLAME/basemaps")
 setwd("C:/Users/Luke/Dropbox/FLAME/basemaps")
 setwd("C:/Users/Vince/Dropbox/FLAME/basemaps")
-setwd("E:/Dropbox/FLAME/basemaps")
+setwd("F:/Dropbox/FLAME/basemaps")
 
 Mendota_Base<-readOGR(getwd(), "Mendota_shape")
 Pool8_Base<-readOGR(getwd(), "Pool8")
@@ -42,7 +42,7 @@ Pool8_Base<-readOGR(getwd(), "Pool8")
 setwd(paste("C:/Users/Luke", FLAMEsubdirectory, sep=""))
 setwd(paste("C:/Users/jtcrawford", FLAMEsubdirectory, sep=""))
 setwd(paste("C:/Users/Vince", FLAMEsubdirectory, sep=""))
-setwd(paste("E:", FLAMEsubdirectory, sep=""))
+setwd(paste("F:", FLAMEsubdirectory, sep=""))
 
 #read in a metadata file that indicates the name, date (YYYY-MM-DD !!!), site, flame intervals, and water samples
 SamplesPath <- list.files(path = paste(getwd(), "/samples", sep=""))
