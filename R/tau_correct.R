@@ -24,7 +24,7 @@ plot(Tau_X, col="blue", type="l")
 points(X, col="black", type="l")
 
 #SpCond
-X<-instrument_table$SpConduScm
+X<-instrument_table$SpCondμScm
 k=3
 tau=6
 hydro=3
@@ -96,7 +96,7 @@ plot(Tau_X, xlim=c(20000, 25000), type="l", col="blue")
 points(X, col="black", type="l")
 
 #ChlA
-X<-instrument_table$ChlAugL
+X<-instrument_table$ChlAμgL
 k=3
 tau=6
 hydro=11.2
