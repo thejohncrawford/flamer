@@ -108,7 +108,6 @@ colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "Turbidity", "Turb
 colnames(merge.data3)<-str_replace_all(colnames(merge.data3), "DRY", "D")
 
 ##write out to a single .csv file###############################################
-write.table(merge.data3, file = as.character(paste(Site, Date, ".csv", sep="")), col.names=TRUE,row.names=F, sep=",")
 return(merge.data3)
 }
 ########################END###########################################################
