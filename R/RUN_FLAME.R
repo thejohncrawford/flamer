@@ -45,8 +45,6 @@ setwd(paste("C:/Users/Vince", FLAMEsubdirectory, sep=""))
 setwd(paste("F:", FLAMEsubdirectory, sep=""))
 
 #read in a metadata file that indicates the name, date (YYYY-MM-DD !!!), site, flame intervals, and water samples
-SamplesPath <- list.files(path = paste(getwd(), "/samples", sep=""))
-Samples<-do.call("rbind", lapply(paste("samples/", SamplesPath, sep=""), read.table, sep="," ,skip=0,  header = TRUE, fill=TRUE)) 
 MetaPath <- list.files(path = paste(getwd(), "/meta", sep=""))
 meta<-do.call("rbind", lapply(paste("meta/", MetaPath, sep=""), read.table, sep="," ,skip=0,  header = TRUE, fill=TRUE)) 
 Date<-as.Date(meta$Date[1], format="%Y-%m-%d")
@@ -54,6 +52,10 @@ Site<-as.character(meta$Site[1])
 Times<-subset(meta, is.na(as.POSIXct(Flame_on, format="%H:%M:%S"))==FALSE)
 Flame_On <- as.POSIXct(paste(Date, Times$Flame_on, sep=" "), format="%Y-%m-%d %H:%M:%S", tz=as.character(meta$GPS_Timezone[1]))
 Flame_Off <- as.POSIXct(paste(Date, Times$Flame_off, sep=" "), format="%Y-%m-%d %H:%M:%S",  tz=as.character(meta$GPS_Timezone[1]))
+
+if (meta$number_of_samples[1]!=0){
+SamplesPath <- list.files(path = paste(getwd(), "/samples", sep=""))
+Samples<-do.call("rbind", lapply(paste("samples/", SamplesPath, sep=""), read.table, sep="," ,skip=0,  header = TRUE, fill=TRUE))}
 ########################################################################################
 #do all 'dem bad things to the FLAMe data
 flame_engage(meta)
