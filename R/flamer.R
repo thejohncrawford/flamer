@@ -1,5 +1,5 @@
-# Read Flame Scripts
-#updated June 2016, Luke Loken
+# Read Flame Scripts and load functions
+# Updated June 2016, Luke Loken
 
 # Main script
 source("FLAMe_Wrapper_All_Maps.R")
